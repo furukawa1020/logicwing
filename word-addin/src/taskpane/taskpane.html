@@ -1,0 +1,56 @@
+﻿<!-- 論理の飛躍スタンプ拡張機能（ロンリちゃん） -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ロンリちゃん </title>
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+    <link rel="stylesheet" href="https://res-1.cdn.office.net/files/fabric-cdn-prod_20230815.002/office-ui-fabric-core/11.1.0/css/office-ui-fabric-core.min.css"/>
+    <link href="taskpane.css" rel="stylesheet" type="text/css" />
+</head>
+<body class="ms-font-m ms-Fabric">
+    <header class="ronri-header">
+        <img width="60" height="60" src="../../assets/印面.png" alt="ロンリちゃん" class="header-logo" />
+        <div class="header-text">
+            <h1 class="ms-font-su">ロンリちゃん</h1>
+            <p class="ms-font-s">論理の飛躍スタンプ拡張 </p>
+        </div>
+    </header>
+    <section id="sideload-msg" class="sideload-section">
+        <h2 class="ms-font-xl">アドインをサイドロードしてください</h2>
+    </section>
+    <main id="app-body" class="main-content" style="display: none;">
+        <div class="control-panel">
+            <button id="detect-btn" class="primary-btn">
+                <span class="btn-icon"></span>
+                <span class="btn-text">論理の飛躍を検出</span>
+            </button>
+            <button id="manual-stamp-btn" class="secondary-btn">
+                <span class="btn-icon"></span>
+                <span class="btn-text">選択範囲に押印</span>
+            </button>
+            <div class="btn-row">
+                <button id="show-history-btn" class="small-btn">
+                    <span class="btn-icon"></span>
+                    <span class="btn-text">履歴</span>
+                </button>
+                <button id="settings-btn" class="small-btn">
+                    <span class="btn-icon"></span>
+                    <span class="btn-text">設定</span>
+                </button>
+            </div>
+        </div>
+        <div id="results" class="results-area" style="display: none;"></div>
+        <div class="description">
+            <h3 class="ms-font-l">使い方</h3>
+            <ol class="ms-font-s">
+                <li>文書に文章を入力します</li>
+                <li>「論理の飛躍を検出」ボタンをクリック</li>
+                <li>ロンリちゃんが論理の飛躍を見つけてくれます</li>
+            </ol>
+        </div>
+    </main>
+</body>
+</html>
