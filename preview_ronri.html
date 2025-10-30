@@ -57,103 +57,35 @@
   <h1>🪽 ロンリちゃん</h1>
   
   <div class="preview-container">
-    <svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <radialGradient id="stampGradient" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" style="stop-color:#FF6B6B;stop-opacity:1" />
-          <stop offset="100%" style="stop-color:#E53935;stop-opacity:1" />
-        </radialGradient>
-        
-        <filter id="shadow">
-          <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>
-          <feOffset dx="0" dy="6" result="offsetblur"/>
-          <feComponentTransfer>
-            <feFuncA type="linear" slope="0.4"/>
-          </feComponentTransfer>
-          <feMerge> 
-            <feMergeNode/>
-            <feMergeNode in="SourceGraphic"/> 
-          </feMerge>
-        </filter>
-      </defs>
-      
-      <!-- 本体：印鑑 -->
-      <g id="stamp-body" filter="url(#shadow)">
-        <!-- 外円 -->
-        <circle cx="100" cy="100" r="80" 
-                fill="url(#stampGradient)" 
-                stroke="#FFFFFF" 
-                stroke-width="8"/>
-        
-        <!-- 内円（装飾） -->
-        <circle cx="100" cy="100" r="68" 
-                fill="none" 
-                stroke="#FFFFFF" 
-                stroke-width="2" 
-                opacity="0.5"/>
-        
-        <!-- 文字：論理の飛躍 -->
-        <text x="100" y="90" 
-              text-anchor="middle" 
-              font-family="'Hiragino Mincho ProN', 'Yu Mincho', serif" 
-              font-size="24" 
-              font-weight="900" 
-              fill="#FFFFFF">
-          論理の
-        </text>
-        
-        <text x="100" y="118" 
-              text-anchor="middle" 
-              font-family="'Hiragino Mincho ProN', 'Yu Mincho', serif" 
-              font-size="24" 
-              font-weight="900" 
-              fill="#FFFFFF">
-          飛躍
-        </text>
-        
-        <!-- 印影の質感 -->
-        <circle cx="85" cy="85" r="6" fill="#FFFFFF" opacity="0.3"/>
-        <circle cx="115" cy="115" r="4" fill="#FFFFFF" opacity="0.25"/>
-      </g>
-      
-      <!-- 右下の小さな羽根装飾 -->
-      <g id="right-wing">
-        <!-- 羽根の扇形 -->
-        <path d="M 150 150 L 165 135 L 168 138 Z" fill="#E53935" opacity="0.9"/>
-        <path d="M 150 150 L 168 140 L 171 143 Z" fill="#E53935" opacity="0.85"/>
-        <path d="M 150 150 L 170 145 L 173 148 Z" fill="#E53935" opacity="0.8"/>
-        <path d="M 150 150 L 171 150 L 174 153 Z" fill="#E53935" opacity="0.75"/>
-        <path d="M 150 150 L 170 155 L 173 158 Z" fill="#E53935" opacity="0.7"/>
-        
-        <!-- 白い縞模様 -->
-        <line x1="150" y1="150" x2="165" y2="135" stroke="white" stroke-width="1.5" opacity="0.6"/>
-        <line x1="150" y1="150" x2="168" y2="140" stroke="white" stroke-width="1.5" opacity="0.6"/>
-        <line x1="150" y1="150" x2="170" y2="145" stroke="white" stroke-width="1.5" opacity="0.6"/>
-        <line x1="150" y1="150" x2="171" y2="150" stroke="white" stroke-width="1.5" opacity="0.6"/>
-        <line x1="150" y1="150" x2="170" y2="155" stroke="white" stroke-width="1.5" opacity="0.6"/>
-        
-        <!-- 羽ばたきアニメーション -->
-        <animateTransform
-          attributeName="transform"
-          attributeType="XML"
-          type="rotate"
-          values="0 150 150; -8 150 150; 0 150 150"
-          dur="0.5s"
-          repeatCount="indefinite"/>
-      </g>
-      
-      <!-- 左側の振動線（削除） -->
-      
-      <!-- 浮遊アニメーション -->
-      <animateTransform
-        attributeName="transform"
-        attributeType="XML"
-        type="translate"
-        values="0 0; 0 -8; 0 0"
-        dur="2s"
-        repeatCount="indefinite"/>
-    </svg>
+    <img src="1000006717.jpg" alt="ロンリちゃん" class="ronri-image" />
   </div>
+  
+  <style>
+    .ronri-image {
+      width: 300px;
+      height: auto;
+      animation: float 2s ease-in-out infinite, pulse 3s ease-in-out infinite;
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.2));
+    }
+    
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-15px);
+      }
+    }
+    
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+  </style>
   
   <div class="description">
     <h2>✨ デザイン特徴</h2>
