@@ -58,15 +58,11 @@
   
   <div class="preview-container">
     <div class="ronri-wrapper">
-      <!-- スタンプ本体（元画像の上部分） -->
+      <!-- スタンプ本体 -->
       <div class="stamp-container">
-        <img src="1000006717.jpg" class="stamp-body" />
-        <!-- 羽根部分を別途アニメーション -->
-        <div class="wing-overlay"></div>
-      </div>
-      <!-- 押印エフェクト（別レイヤー） -->
-      <div class="stamp-mark">
-        <img src="1000006717.jpg" class="stamp-effect" />
+        <img src="src/assets/印面.png" class="stamp-body" alt="論理ちゃん本体" />
+        <!-- 羽根部分をパタパタアニメーション -->
+        <img src="src/assets/論理の翼.png" class="wing-overlay" alt="論理の翼" />
       </div>
     </div>
   </div>
@@ -79,48 +75,26 @@
     }
     
     .stamp-container {
-      position: absolute;
-      top: 0;
-      left: 0;
+      position: relative;
       width: 100%;
       animation: float 2s ease-in-out infinite;
       filter: drop-shadow(0 8px 16px rgba(0,0,0,0.2));
-      z-index: 2;
     }
     
     .stamp-body {
       width: 100%;
       height: auto;
-      clip-path: inset(0 0 45% 0); /* 上55%だけ表示（スタンプ本体） */
+      display: block;
     }
     
     .wing-overlay {
       position: absolute;
-      right: -15%;
-      top: 40%;
-      width: 50px;
-      height: 60px;
-      background: linear-gradient(135deg, #E53935 0%, #C62828 100%);
-      clip-path: polygon(0% 50%, 40% 20%, 60% 15%, 80% 20%, 100% 0%, 100% 30%, 95% 50%, 100% 70%, 100% 100%, 80% 80%, 60% 85%, 40% 80%, 0% 50%);
+      right: 10%;
+      bottom: 15%;
+      width: 25%;
+      height: auto;
       transform-origin: left center;
       animation: wingFlap 0.5s ease-in-out infinite;
-      opacity: 0.9;
-    }
-    
-    .stamp-mark {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100%;
-      opacity: 0.6;
-      z-index: 1;
-    }
-    
-    .stamp-effect {
-      width: 100%;
-      height: auto;
-      clip-path: inset(55% 0 0 0); /* 下45%だけ表示（押印エフェクト） */
     }
     
     @keyframes float {
@@ -137,10 +111,10 @@
         transform: rotateZ(0deg) scaleX(1);
       }
       25% {
-        transform: rotateZ(-10deg) scaleX(0.9);
+        transform: rotateZ(-15deg) scaleX(0.85);
       }
       75% {
-        transform: rotateZ(10deg) scaleX(1.1);
+        transform: rotateZ(15deg) scaleX(1.15);
       }
     }
   </style>
