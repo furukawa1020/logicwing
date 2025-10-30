@@ -116,55 +116,33 @@
         <circle cx="115" cy="115" r="4" fill="#FFFFFF" opacity="0.25"/>
       </g>
       
-      <!-- 右翼（画像通りのデザイン） -->
+      <!-- 右下の小さな羽根装飾 -->
       <g id="right-wing">
-        <path d="M 170 70 
-                 Q 190 50, 200 40
-                 Q 205 60, 207 80
-                 Q 208 100, 205 120
-                 Q 190 110, 180 100
-                 Q 175 90, 172 80
-                 Z"
-              fill="#E53935"
-              stroke="#FFFFFF"
-              stroke-width="3"
-              opacity="1">
-          <animateTransform
-            attributeName="transform"
-            attributeType="XML"
-            type="rotate"
-            values="0 170 90; -20 170 90; 0 170 90"
-            dur="0.6s"
-            repeatCount="indefinite"/>
-        </path>
+        <!-- 羽根の扇形 -->
+        <path d="M 150 150 L 165 135 L 168 138 Z" fill="#E53935" opacity="0.9"/>
+        <path d="M 150 150 L 168 140 L 171 143 Z" fill="#E53935" opacity="0.85"/>
+        <path d="M 150 150 L 170 145 L 173 148 Z" fill="#E53935" opacity="0.8"/>
+        <path d="M 150 150 L 171 150 L 174 153 Z" fill="#E53935" opacity="0.75"/>
+        <path d="M 150 150 L 170 155 L 173 158 Z" fill="#E53935" opacity="0.7"/>
         
-        <!-- 羽の羽根模様 -->
-        <line x1="175" y1="70" x2="195" y2="50" stroke="#FFFFFF" stroke-width="2.5" opacity="0.6"/>
-        <line x1="175" y1="80" x2="200" y2="65" stroke="#FFFFFF" stroke-width="2.5" opacity="0.6"/>
-        <line x1="175" y1="90" x2="202" y2="80" stroke="#FFFFFF" stroke-width="2.5" opacity="0.6"/>
-        <line x1="175" y1="100" x2="200" y2="95" stroke="#FFFFFF" stroke-width="2.5" opacity="0.6"/>
-        <line x1="175" y1="110" x2="195" y2="110" stroke="#FFFFFF" stroke-width="2.5" opacity="0.6"/>
+        <!-- 白い縞模様 -->
+        <line x1="150" y1="150" x2="165" y2="135" stroke="white" stroke-width="1.5" opacity="0.6"/>
+        <line x1="150" y1="150" x2="168" y2="140" stroke="white" stroke-width="1.5" opacity="0.6"/>
+        <line x1="150" y1="150" x2="170" y2="145" stroke="white" stroke-width="1.5" opacity="0.6"/>
+        <line x1="150" y1="150" x2="171" y2="150" stroke="white" stroke-width="1.5" opacity="0.6"/>
+        <line x1="150" y1="150" x2="170" y2="155" stroke="white" stroke-width="1.5" opacity="0.6"/>
+        
+        <!-- 羽ばたきアニメーション -->
+        <animateTransform
+          attributeName="transform"
+          attributeType="XML"
+          type="rotate"
+          values="0 150 150; -8 150 150; 0 150 150"
+          dur="0.5s"
+          repeatCount="indefinite"/>
       </g>
       
-      <!-- 振動線（画像の左側の線） -->
-      <g id="vibration-lines" opacity="0.8">
-        <path d="M 30 80 Q 35 75, 40 80" stroke="#E53935" stroke-width="4" fill="none" stroke-linecap="round">
-          <animate attributeName="opacity" values="0.8;0.3;0.8" dur="0.6s" repeatCount="indefinite"/>
-        </path>
-        <path d="M 35 95 Q 40 90, 45 95" stroke="#E53935" stroke-width="4" fill="none" stroke-linecap="round">
-          <animate attributeName="opacity" values="0.6;0.2;0.6" dur="0.6s" begin="0.2s" repeatCount="indefinite"/>
-        </path>
-        <path d="M 30 110 Q 35 105, 40 110" stroke="#E53935" stroke-width="4" fill="none" stroke-linecap="round">
-          <animate attributeName="opacity" values="0.7;0.25;0.7" dur="0.6s" begin="0.4s" repeatCount="indefinite"/>
-        </path>
-      </g>
-      
-      <!-- 押印エフェクト線（右下の線） -->
-      <g id="impact-lines" opacity="0.7">
-        <path d="M 145 145 L 160 160" stroke="#E53935" stroke-width="5" stroke-linecap="round"/>
-        <path d="M 155 140 L 170 150" stroke="#E53935" stroke-width="4" stroke-linecap="round"/>
-        <path d="M 140 155 L 150 170" stroke="#E53935" stroke-width="4" stroke-linecap="round"/>
-      </g>
+      <!-- 左側の振動線（削除） -->
       
       <!-- 浮遊アニメーション -->
       <animateTransform
