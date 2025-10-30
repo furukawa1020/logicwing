@@ -1,156 +1,111 @@
 <!-- ロンリちゃん🪽 キャラクターアセット SVG -->
 <svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <!-- グラデーション定義 -->
     <radialGradient id="stampGradient" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" style="stop-color:#FF5252;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#C62828;stop-opacity:1" />
+      <stop offset="0%" style="stop-color:#FF6B6B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E53935;stop-opacity:1" />
     </radialGradient>
     
     <filter id="shadow">
-      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
-      <feOffset dx="0" dy="4" result="offsetblur"/>
+      <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>
+      <feOffset dx="0" dy="6" result="offsetblur"/>
       <feComponentTransfer>
-        <feFuncA type="linear" slope="0.3"/>
+        <feFuncA type="linear" slope="0.4"/>
       </feComponentTransfer>
       <feMerge> 
         <feMergeNode/>
         <feMergeNode in="SourceGraphic"/> 
       </feMerge>
     </filter>
-    
-    <!-- 羽ばたきアニメーション -->
-    <animateTransform
-      id="wingFlap"
-      attributeName="transform"
-      attributeType="XML"
-      type="rotate"
-      from="0 150 100"
-      to="-30 150 100"
-      dur="0.4s"
-      repeatCount="indefinite"
-      additive="sum"/>
   </defs>
   
   <!-- 本体：印鑑 -->
   <g id="stamp-body" filter="url(#shadow)">
     <!-- 外円 -->
-    <circle cx="100" cy="100" r="70" 
+    <circle cx="100" cy="100" r="80" 
             fill="url(#stampGradient)" 
-            stroke="#8B0000" 
-            stroke-width="4"/>
+            stroke="#FFFFFF" 
+            stroke-width="8"/>
     
     <!-- 内円（装飾） -->
-    <circle cx="100" cy="100" r="60" 
+    <circle cx="100" cy="100" r="68" 
             fill="none" 
             stroke="#FFFFFF" 
             stroke-width="2" 
-            opacity="0.3"/>
+            opacity="0.5"/>
     
     <!-- 文字：論理の飛躍 -->
-    <text x="100" y="70" 
+    <text x="100" y="90" 
           text-anchor="middle" 
-          font-family="'Hiragino Mincho ProN', serif" 
-          font-size="18" 
-          font-weight="bold" 
-          fill="#FFFFFF" 
-          writing-mode="tb"
-          letter-spacing="4">
-      論理
+          font-family="'Hiragino Mincho ProN', 'Yu Mincho', serif" 
+          font-size="24" 
+          font-weight="900" 
+          fill="#FFFFFF">
+      論理の
     </text>
     
-    <text x="100" y="120" 
+    <text x="100" y="118" 
           text-anchor="middle" 
-          font-family="'Hiragino Mincho ProN', serif" 
-          font-size="18" 
-          font-weight="bold" 
-          fill="#FFFFFF" 
-          writing-mode="tb"
-          letter-spacing="4">
-      の飛躍
+          font-family="'Hiragino Mincho ProN', 'Yu Mincho', serif" 
+          font-size="24" 
+          font-weight="900" 
+          fill="#FFFFFF">
+      飛躍
     </text>
     
     <!-- 印影の質感 -->
-    <circle cx="90" cy="90" r="5" fill="#FFFFFF" opacity="0.4"/>
-    <circle cx="110" cy="110" r="3" fill="#FFFFFF" opacity="0.3"/>
+    <circle cx="85" cy="85" r="6" fill="#FFFFFF" opacity="0.3"/>
+    <circle cx="115" cy="115" r="4" fill="#FFFFFF" opacity="0.25"/>
   </g>
   
-  <!-- 右翼 -->
+  <!-- 右翼（画像通りのデザイン） -->
   <g id="right-wing">
-    <path d="M 150 80 
-             Q 180 60, 190 50
-             Q 185 70, 190 85
-             Q 185 100, 190 120
-             Q 180 110, 150 100
+    <path d="M 170 70 
+             Q 190 50, 200 40
+             Q 205 60, 207 80
+             Q 208 100, 205 120
+             Q 190 110, 180 100
+             Q 175 90, 172 80
              Z"
           fill="#E53935"
-          stroke="#C62828"
-          stroke-width="2"
-          opacity="0.9">
+          stroke="#FFFFFF"
+          stroke-width="3"
+          opacity="1">
       <animateTransform
         attributeName="transform"
         attributeType="XML"
         type="rotate"
-        values="0 150 100; -20 150 100; 0 150 100"
-        dur="0.8s"
+        values="0 170 90; -20 170 90; 0 170 90"
+        dur="0.6s"
         repeatCount="indefinite"/>
     </path>
     
-    <!-- 羽の模様 -->
-    <path d="M 155 85 Q 170 70, 180 65"
-          stroke="#FFFFFF"
-          stroke-width="1.5"
-          fill="none"
-          opacity="0.5"/>
-    <path d="M 155 95 Q 170 85, 180 82"
-          stroke="#FFFFFF"
-          stroke-width="1.5"
-          fill="none"
-          opacity="0.5"/>
-    <path d="M 155 105 Q 170 100, 180 98"
-          stroke="#FFFFFF"
-          stroke-width="1.5"
-          fill="none"
-          opacity="0.5"/>
+    <!-- 羽の羽根模様 -->
+    <line x1="175" y1="70" x2="195" y2="50" stroke="#FFFFFF" stroke-width="2.5" opacity="0.6"/>
+    <line x1="175" y1="80" x2="200" y2="65" stroke="#FFFFFF" stroke-width="2.5" opacity="0.6"/>
+    <line x1="175" y1="90" x2="202" y2="80" stroke="#FFFFFF" stroke-width="2.5" opacity="0.6"/>
+    <line x1="175" y1="100" x2="200" y2="95" stroke="#FFFFFF" stroke-width="2.5" opacity="0.6"/>
+    <line x1="175" y1="110" x2="195" y2="110" stroke="#FFFFFF" stroke-width="2.5" opacity="0.6"/>
   </g>
   
-  <!-- 目（表情） -->
-  <g id="face">
-    <!-- 左目 -->
-    <ellipse cx="85" cy="95" rx="3" ry="5" fill="#FFFFFF" opacity="0.8"/>
-    <!-- 右目 -->
-    <ellipse cx="115" cy="95" rx="3" ry="5" fill="#FFFFFF" opacity="0.8"/>
-    
-    <!-- 口（ドヤ顔） -->
-    <path d="M 90 110 Q 100 115, 110 110"
-          stroke="#FFFFFF"
-          stroke-width="2"
-          fill="none"
-          opacity="0.6"/>
+  <!-- 振動線（画像の左側の線） -->
+  <g id="vibration-lines" opacity="0.8">
+    <path d="M 30 80 Q 35 75, 40 80" stroke="#E53935" stroke-width="4" fill="none" stroke-linecap="round">
+      <animate attributeName="opacity" values="0.8;0.3;0.8" dur="0.6s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 35 95 Q 40 90, 45 95" stroke="#E53935" stroke-width="4" fill="none" stroke-linecap="round">
+      <animate attributeName="opacity" values="0.6;0.2;0.6" dur="0.6s" begin="0.2s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 30 110 Q 35 105, 40 110" stroke="#E53935" stroke-width="4" fill="none" stroke-linecap="round">
+      <animate attributeName="opacity" values="0.7;0.25;0.7" dur="0.6s" begin="0.4s" repeatCount="indefinite"/>
+    </path>
   </g>
   
-  <!-- インク飛沫エフェクト（初期状態は非表示） -->
-  <g id="ink-splash" opacity="0">
-    <circle cx="50" cy="50" r="4" fill="#E53935">
-      <animate attributeName="opacity" from="1" to="0" dur="0.6s"/>
-      <animate attributeName="cx" from="100" to="50" dur="0.6s"/>
-      <animate attributeName="cy" from="100" to="50" dur="0.6s"/>
-    </circle>
-    <circle cx="150" cy="50" r="3" fill="#E53935">
-      <animate attributeName="opacity" from="1" to="0" dur="0.6s"/>
-      <animate attributeName="cx" from="100" to="150" dur="0.6s"/>
-      <animate attributeName="cy" from="100" to="50" dur="0.6s"/>
-    </circle>
-    <circle cx="50" cy="150" r="3" fill="#E53935">
-      <animate attributeName="opacity" from="1" to="0" dur="0.6s"/>
-      <animate attributeName="cx" from="100" to="50" dur="0.6s"/>
-      <animate attributeName="cy" from="100" to="150" dur="0.6s"/>
-    </circle>
-    <circle cx="150" cy="150" r="4" fill="#E53935">
-      <animate attributeName="opacity" from="1" to="0" dur="0.6s"/>
-      <animate attributeName="cx" from="100" to="150" dur="0.6s"/>
-      <animate attributeName="cy" from="100" to="150" dur="0.6s"/>
-    </circle>
+  <!-- 押印エフェクト線（右下の線） -->
+  <g id="impact-lines" opacity="0.7">
+    <path d="M 145 145 L 160 160" stroke="#E53935" stroke-width="5" stroke-linecap="round"/>
+    <path d="M 155 140 L 170 150" stroke="#E53935" stroke-width="4" stroke-linecap="round"/>
+    <path d="M 140 155 L 150 170" stroke="#E53935" stroke-width="4" stroke-linecap="round"/>
   </g>
   
   <!-- 浮遊アニメーション -->
@@ -158,7 +113,7 @@
     attributeName="transform"
     attributeType="XML"
     type="translate"
-    values="0 0; 0 -10; 0 0"
+    values="0 0; 0 -8; 0 0"
     dur="2s"
     repeatCount="indefinite"/>
 </svg>
