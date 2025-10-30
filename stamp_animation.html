@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+      background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    #canvas-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    
+    #ronri-character {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      z-index: 100;
+    }
+    
+    .ronri-body {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .stamp-circle {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: #E53935;
+      border: 4px solid #C62828;
+      box-shadow: 0 4px 12px rgba(229, 57, 53, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      left: 10px;
+      top: 10px;
+    }
+    
+    .stamp-text {
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+      text-align: center;
+      line-height: 1.3;
+      letter-spacing: 2px;
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+    }
+    
+    .wing {
+      position: absolute;
+      width: 40px;
+      height: 60px;
+      right: -5px;
+      top: 30px;
+      animation: flap 0.8s ease-in-out infinite;
+    }
+    
+    .wing path {
+      fill: #E53935;
+      opacity: 0.9;
+    }
+    
+    @keyframes flap {
+      0%, 100% { transform: rotateY(0deg) translateX(0); }
+      50% { transform: rotateY(-30deg) translateX(-3px); }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .floating {
+      animation: float 2s ease-in-out infinite;
+    }
+    
+    @keyframes stamp-impact {
+      0% { transform: scale(1) rotate(0deg); }
+      30% { transform: scale(1.15) rotate(2deg); }
+      60% { transform: scale(0.95) rotate(-1deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    
+    .stamping {
+      animation: stamp-impact 0.3s ease-out;
+    }
+    
+    .ink-particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: #E53935;
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 0;
+    }
+    
+    @keyframes particle-burst {
+      0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(var(--tx), var(--ty)) scale(0.3);
+      }
+    }
+    
+    .particle-animate {
+      animation: particle-burst 0.6s ease-out forwards;
+    }
+    
+    #stamp-container {
+      position: absolute;
+      pointer-events: none;
+      z-index: 50;
+    }
+    
+    .stamped-mark {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      opacity: 0;
+      transform-origin: center;
+    }
+    
+    @keyframes stamp-appear {
+      0% {
+        opacity: 0;
+        transform: scale(0.5) rotate(-10deg);
+      }
+      50% {
+        opacity: 0.9;
+        transform: scale(1.1) rotate(2deg);
+      }
+      100% {
+        opacity: 0.85;
+        transform: scale(1) rotate(0deg);
+      }
+    }
+    
+    .stamp-appear {
+      animation: stamp-appear 0.4s ease-out forwards;
+    }
+    
+    #info-panel {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      padding: 16px 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      max-width: 400px;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    #info-panel.show {
+      opacity: 1;
+    }
+    
+    .leap-text {
+      color: #333;
+      font-size: 13px;
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
+    
+    .leap-score {
+      color: #E53935;
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+    
+    .leap-reason {
+      color: #666;
+      font-size: 12px;
+      font-style: italic;
+    }
+    
+    #progress {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #E53935;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    
+    #complete-message {
+      display: none;
+      text-align: center;
+      padding: 40px;
+    }
+    
+    #complete-message.show {
+      display: block;
+    }
+    
+    .complete-title {
+      color: #E53935;
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 16px;
+    }
+    
+    .complete-count {
+      color: #333;
+      font-size: 20px;
+      margin-bottom: 24px;
+    }
+    
+    .btn-close {
+      background: #E53935;
+      color: white;
+      border: none;
+      padding: 12px 32px;
+      border-radius: 24px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .btn-close:hover {
+      background: #C62828;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(229, 57, 53, 0.4);
+    }
+    
+    .sound-toggle {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      opacity: 0.6;
+      transition: opacity 0.3s;
+    }
+    
+    .sound-toggle:hover {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <button class="sound-toggle" id="soundToggle">🔊</button>
+  <div id="progress">検出中...</div>
+  <div id="canvas-container">
+    <div id="ronri-character" class="floating">
+      <div class="ronri-body">
+        <div class="stamp-circle">
+          <div class="stamp-text">論理の飛躍</div>
+        </div>
+        <svg class="wing" viewBox="0 0 40 60" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5,30 Q20,10 35,5 Q30,25 35,30 Q30,35 35,55 Q20,50 5,30 Z"/>
+        </svg>
+      </div>
+    </div>
+    <div id="stamp-container"></div>
+  </div>
+  
+  <div id="info-panel">
+    <div class="leap-text" id="leapText"></div>
+    <div class="leap-score" id="leapScore"></div>
+    <div class="leap-reason" id="leapReason"></div>
+  </div>
+  
+  <div id="complete-message">
+    <div class="complete-title">押印完了！🪽</div>
+    <div class="complete-count" id="stampCount"></div>
+    <button class="btn-close" onclick="closeDialog()">閉じる</button>
+  </div>
+
+  <script>
+    const leaps = JSON.parse('<?= leaps ?>');
+    let currentIndex = 0;
+    let soundEnabled = true;
+    
+    const ronriChar = document.getElementById('ronri-character');
+    const infoPanel = document.getElementById('info-panel');
+    const progress = document.getElementById('progress');
+    const stampContainer = document.getElementById('stamp-container');
+    const completeMessage = document.getElementById('complete-message');
+    
+    // サウンド切り替え
+    document.getElementById('soundToggle').addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      document.getElementById('soundToggle').textContent = soundEnabled ? '🔊' : '🔇';
+    });
+    
+    // 効果音を再生（Web Audio API）
+    function playStampSound() {
+      if (!soundEnabled) return;
+      
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.frequency.value = 200;
+      oscillator.type = 'sine';
+      
+      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+      
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.1);
+    }
+    
+    // インク飛沫エフェクト
+    function createInkSplash(x, y) {
+      for (let i = 0; i < 5; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'ink-particle';
+        particle.style.left = x + 'px';
+        particle.style.top = y + 'px';
+        
+        const angle = (Math.PI * 2 * i) / 5;
+        const distance = 30 + Math.random() * 20;
+        const tx = Math.cos(angle) * distance;
+        const ty = Math.sin(angle) * distance;
+        
+        particle.style.setProperty('--tx', tx + 'px');
+        particle.style.setProperty('--ty', ty + 'px');
+        
+        document.body.appendChild(particle);
+        
+        setTimeout(() => {
+          particle.classList.add('particle-animate');
+        }, 10);
+        
+        setTimeout(() => {
+          particle.remove();
+        }, 650);
+      }
+    }
+    
+    // スタンプを押す
+    function stampLeap(leap, index) {
+      progress.textContent = `${index + 1} / ${leaps.length}`;
+      
+      // ランダムな位置に移動
+      const x = 50 + Math.random() * 300;
+      const y = 100 + Math.random() * 200;
+      
+      ronriChar.style.left = x + 'px';
+      ronriChar.style.top = y + 'px';
+      ronriChar.classList.remove('floating');
+      
+      // 情報パネルを更新
+      document.getElementById('leapText').textContent = leap.text;
+      document.getElementById('leapScore').textContent = `飛躍度: ${leap.score}%`;
+      document.getElementById('leapReason').textContent = leap.reason || '';
+      infoPanel.classList.add('show');
+      
+      setTimeout(() => {
+        // 押印アニメーション
+        ronriChar.classList.add('stamping');
+        playStampSound();
+        
+        // インク飛沫
+        createInkSplash(x + 50, y + 50);
+        
+        // スタンプマークを配置
+        const stampMark = document.createElement('div');
+        stampMark.className = 'stamped-mark';
+        stampMark.innerHTML = `
+          <svg width="80" height="80" viewBox="0 0 80 80">
+            <circle cx="40" cy="40" r="36" fill="#E53935" opacity="0.3" stroke="#C62828" stroke-width="2"/>
+            <text x="40" y="45" text-anchor="middle" fill="white" font-size="12" font-weight="bold" writing-mode="tb">論理の飛躍</text>
+          </svg>
+        `;
+        stampMark.style.left = (x + 10) + 'px';
+        stampMark.style.top = (y + 10) + 'px';
+        stampContainer.appendChild(stampMark);
+        
+        setTimeout(() => {
+          stampMark.classList.add('stamp-appear');
+        }, 10);
+        
+        // データを保存
+        google.script.run.saveStampData(leap);
+        
+        setTimeout(() => {
+          ronriChar.classList.remove('stamping');
+          ronriChar.classList.add('floating');
+        }, 300);
+      }, 800);
+      
+      // 次の検出へ
+      setTimeout(() => {
+        infoPanel.classList.remove('show');
+        currentIndex++;
+        
+        if (currentIndex < leaps.length) {
+          stampLeap(leaps[currentIndex], currentIndex);
+        } else {
+          showComplete();
+        }
+      }, 2500);
+    }
+    
+    // 完了画面を表示
+    function showComplete() {
+      ronriChar.style.transition = 'all 1s ease-out';
+      ronriChar.style.top = '-150px';
+      ronriChar.style.opacity = '0';
+      
+      setTimeout(() => {
+        progress.style.display = 'none';
+        document.getElementById('stampCount').textContent = `${leaps.length}箇所に押印しました`;
+        completeMessage.classList.add('show');
+      }, 1000);
+    }
+    
+    // ダイアログを閉じる
+    function closeDialog() {
+      google.script.host.close();
+    }
+    
+    // アニメーション開始
+    if (leaps.length > 0) {
+      setTimeout(() => {
+        stampLeap(leaps[0], 0);
+      }, 1000);
+    } else {
+      progress.textContent = '検出なし';
+      setTimeout(closeDialog, 2000);
+    }
+  </script>
+</body>
+</html>

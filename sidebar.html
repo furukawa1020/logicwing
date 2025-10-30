@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+      background: #f9f9f9;
+      padding: 16px;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #E53935;
+    }
+    
+    .header-title {
+      color: #E53935;
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    
+    .header-icon {
+      font-size: 32px;
+    }
+    
+    .stats {
+      background: white;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .stat-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    
+    .stat-label {
+      color: #666;
+    }
+    
+    .stat-value {
+      color: #E53935;
+      font-weight: bold;
+    }
+    
+    .history-list {
+      max-height: calc(100vh - 280px);
+      overflow-y: auto;
+    }
+    
+    .history-item {
+      background: white;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      border-left: 4px solid #E53935;
+      transition: transform 0.2s;
+    }
+    
+    .history-item:hover {
+      transform: translateX(4px);
+    }
+    
+    .history-text {
+      color: #333;
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 8px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+    
+    .history-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+    }
+    
+    .history-score {
+      background: #E53935;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-weight: bold;
+    }
+    
+    .history-time {
+      color: #999;
+    }
+    
+    .history-type {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      margin-left: 4px;
+    }
+    
+    .type-pattern {
+      background: #FFEBEE;
+      color: #C62828;
+    }
+    
+    .type-random {
+      background: #FFF3E0;
+      color: #EF6C00;
+    }
+    
+    .type-manual {
+      background: #E8F5E9;
+      color: #2E7D32;
+    }
+    
+    .type-polished {
+      background: #E3F2FD;
+      color: #1565C0;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #999;
+    }
+    
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+    
+    .btn-clear {
+      width: 100%;
+      padding: 12px;
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      color: #666;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 16px;
+      transition: all 0.3s;
+    }
+    
+    .btn-clear:hover {
+      background: #E53935;
+      color: white;
+      border-color: #E53935;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+    }
+    
+    .spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #E53935;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-icon">🪽</div>
+    <div class="header-title">押印履歴</div>
+  </div>
+  
+  <div class="stats" id="stats">
+    <div class="stat-item">
+      <span class="stat-label">総押印数</span>
+      <span class="stat-value" id="totalCount">-</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">平均飛躍度</span>
+      <span class="stat-value" id="avgScore">-</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">最終押印</span>
+      <span class="stat-value" id="lastStamp">-</span>
+    </div>
+  </div>
+  
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+    <div>読み込み中...</div>
+  </div>
+  
+  <div class="history-list" id="historyList" style="display: none;"></div>
+  
+  <button class="btn-clear" id="btnClear" onclick="clearHistory()" style="display: none;">
+    履歴をクリア
+  </button>
+
+  <script>
+    // 履歴を読み込み
+    function loadHistory() {
+      google.script.run
+        .withSuccessHandler(displayHistory)
+        .withFailureHandler(showError)
+        .getStampHistory();
+    }
+    
+    // 履歴を表示
+    function displayHistory(history) {
+      document.getElementById('loading').style.display = 'none';
+      const listContainer = document.getElementById('historyList');
+      const btnClear = document.getElementById('btnClear');
+      
+      if (!history || history.length === 0) {
+        listContainer.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">🪽</div>
+            <div>まだ押印がありません</div>
+          </div>
+        `;
+        listContainer.style.display = 'block';
+        return;
+      }
+      
+      // 統計を更新
+      updateStats(history);
+      
+      // 履歴リストを生成
+      let html = '';
+      for (const item of history) {
+        const typeClass = `type-${item.type || 'pattern'}`;
+        const typeLabel = getTypeLabel(item.type);
+        const time = formatTime(item.timestamp);
+        
+        html += `
+          <div class="history-item">
+            <div class="history-text">${escapeHtml(item.text)}</div>
+            <div class="history-meta">
+              <div>
+                <span class="history-score">${item.score}%</span>
+                <span class="history-type ${typeClass}">${typeLabel}</span>
+              </div>
+              <span class="history-time">${time}</span>
+            </div>
+          </div>
+        `;
+      }
+      
+      listContainer.innerHTML = html;
+      listContainer.style.display = 'block';
+      btnClear.style.display = 'block';
+    }
+    
+    // 統計を更新
+    function updateStats(history) {
+      const totalCount = history.length;
+      const totalScore = history.reduce((sum, item) => sum + item.score, 0);
+      const avgScore = Math.round(totalScore / totalCount);
+      const lastStamp = history[0] ? formatTime(history[0].timestamp) : '-';
+      
+      document.getElementById('totalCount').textContent = totalCount + '件';
+      document.getElementById('avgScore').textContent = avgScore + '%';
+      document.getElementById('lastStamp').textContent = lastStamp;
+    }
+    
+    // タイプラベルを取得
+    function getTypeLabel(type) {
+      const labels = {
+        pattern: '検出',
+        random: '気まぐれ',
+        manual: '手動',
+        polished: '整いすぎ',
+        ai: 'AI'
+      };
+      return labels[type] || '検出';
+    }
+    
+    // 時刻をフォーマット
+    function formatTime(timestamp) {
+      if (!timestamp) return '-';
+      
+      const date = new Date(timestamp);
+      const now = new Date();
+      const diff = now - date;
+      
+      // 1分以内
+      if (diff < 60000) {
+        return 'たった今';
+      }
+      // 1時間以内
+      if (diff < 3600000) {
+        return Math.floor(diff / 60000) + '分前';
+      }
+      // 24時間以内
+      if (diff < 86400000) {
+        return Math.floor(diff / 3600000) + '時間前';
+      }
+      // それ以上
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      return `${month}/${day} ${hours}:${minutes}`;
+    }
+    
+    // HTMLエスケープ
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    // エラー表示
+    function showError(error) {
+      document.getElementById('loading').innerHTML = `
+        <div style="color: #E53935;">
+          <div>⚠️</div>
+          <div>エラーが発生しました</div>
+        </div>
+      `;
+    }
+    
+    // 履歴をクリア
+    function clearHistory() {
+      if (!confirm('押印履歴をすべてクリアしますか?')) {
+        return;
+      }
+      
+      const userProperties = PropertiesService.getUserProperties();
+      userProperties.deleteProperty('ronri_history');
+      
+      location.reload();
+    }
+    
+    // 初期化
+    loadHistory();
+  </script>
+</body>
+</html>

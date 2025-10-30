@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+      background: #f9f9f9;
+      padding: 24px;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #E53935;
+    }
+    
+    .header-title {
+      color: #E53935;
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    
+    .header-icon {
+      font-size: 40px;
+    }
+    
+    .setting-section {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .section-title {
+      color: #333;
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .section-icon {
+      margin-right: 8px;
+      font-size: 20px;
+    }
+    
+    .setting-item {
+      margin-bottom: 16px;
+    }
+    
+    .setting-label {
+      display: block;
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    
+    .setting-description {
+      color: #999;
+      font-size: 12px;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+    
+    select, input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: border-color 0.3s;
+    }
+    
+    select:focus, input:focus {
+      outline: none;
+      border-color: #E53935;
+    }
+    
+    .checkbox-wrapper {
+      display: flex;
+      align-items: center;
+    }
+    
+    input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+      cursor: pointer;
+    }
+    
+    .range-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    input[type="range"] {
+      flex: 1;
+      height: 6px;
+      border-radius: 3px;
+      background: #ddd;
+      outline: none;
+      -webkit-appearance: none;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #E53935;
+      cursor: pointer;
+    }
+    
+    input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #E53935;
+      cursor: pointer;
+      border: none;
+    }
+    
+    .range-value {
+      min-width: 40px;
+      text-align: right;
+      color: #E53935;
+      font-weight: bold;
+    }
+    
+    .theme-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    
+    .theme-option {
+      padding: 16px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .theme-option:hover {
+      border-color: #E53935;
+      transform: translateY(-2px);
+    }
+    
+    .theme-option.selected {
+      border-color: #E53935;
+      background: #FFEBEE;
+    }
+    
+    .theme-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+    
+    .theme-name {
+      font-size: 13px;
+      font-weight: bold;
+      color: #333;
+    }
+    
+    .btn-container {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    
+    .btn {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .btn-save {
+      background: #E53935;
+      color: white;
+    }
+    
+    .btn-save:hover {
+      background: #C62828;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(229, 57, 53, 0.4);
+    }
+    
+    .btn-cancel {
+      background: #f5f5f5;
+      color: #666;
+    }
+    
+    .btn-cancel:hover {
+      background: #e0e0e0;
+    }
+    
+    .ai-warning {
+      background: #FFF3E0;
+      border-left: 4px solid #FF9800;
+      padding: 12px;
+      margin-top: 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #E65100;
+      display: none;
+    }
+    
+    .ai-warning.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-icon">⚙️</div>
+    <div class="header-title">ロンリちゃん設定</div>
+  </div>
+  
+  <div class="setting-section">
+    <div class="section-title">
+      <span class="section-icon">🎨</span>
+      テーマ選択
+    </div>
+    <div class="theme-options" id="themeOptions">
+      <div class="theme-option selected" data-theme="logical_leap">
+        <div class="theme-icon">🪽</div>
+        <div class="theme-name">論理の飛躍</div>
+      </div>
+      <div class="theme-option" data-theme="too_polished">
+        <div class="theme-icon">⚙️</div>
+        <div class="theme-name">整いすぎ警報</div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="setting-section">
+    <div class="section-title">
+      <span class="section-icon">🎲</span>
+      検出設定
+    </div>
+    
+    <div class="setting-item">
+      <label class="setting-label">ランダム検出率</label>
+      <div class="range-wrapper">
+        <input type="range" id="randomRate" min="0" max="20" value="5" step="1">
+        <span class="range-value" id="randomRateValue">5%</span>
+      </div>
+      <div class="setting-description">
+        気まぐれに飛躍を検出する確率です。遊び心を演出します。
+      </div>
+    </div>
+    
+    <div class="setting-item">
+      <div class="checkbox-wrapper">
+        <input type="checkbox" id="enableSound" checked>
+        <label class="setting-label" style="margin: 0;">効果音を再生</label>
+      </div>
+      <div class="setting-description">
+        押印時の「ポンッ」という効果音のON/OFFを切り替えます。
+      </div>
+    </div>
+  </div>
+  
+  <div class="setting-section">
+    <div class="section-title">
+      <span class="section-icon">🤖</span>
+      AI補助検出（オプション）
+    </div>
+    
+    <div class="setting-item">
+      <div class="checkbox-wrapper">
+        <input type="checkbox" id="enableAI">
+        <label class="setting-label" style="margin: 0;">AI検出を有効化</label>
+      </div>
+      <div class="setting-description">
+        GPT APIを使用して、より高度な文脈分析を行います。
+      </div>
+    </div>
+    
+    <div class="setting-item" id="aiKeySection" style="display: none;">
+      <label class="setting-label">OpenAI API Key</label>
+      <input type="text" id="aiApiKey" placeholder="sk-...">
+      <div class="setting-description">
+        OpenAIのAPIキーを入力してください。
+      </div>
+      <div class="ai-warning" id="aiWarning">
+        ⚠️ APIキーは安全に保管されますが、使用には料金が発生する場合があります。
+      </div>
+    </div>
+  </div>
+  
+  <div class="btn-container">
+    <button class="btn btn-cancel" onclick="closeDialog()">キャンセル</button>
+    <button class="btn btn-save" onclick="saveSettings()">保存</button>
+  </div>
+
+  <script>
+    let currentSettings = {};
+    
+    // 設定を読み込み
+    function loadSettings() {
+      google.script.run
+        .withSuccessHandler(displaySettings)
+        .getSettings();
+    }
+    
+    // 設定を表示
+    function displaySettings(settings) {
+      currentSettings = settings;
+      
+      // テーマ選択
+      document.querySelectorAll('.theme-option').forEach(option => {
+        option.classList.remove('selected');
+        if (option.dataset.theme === settings.theme) {
+          option.classList.add('selected');
+        }
+      });
+      
+      // ランダム検出率
+      document.getElementById('randomRate').value = settings.randomRate || 5;
+      document.getElementById('randomRateValue').textContent = (settings.randomRate || 5) + '%';
+      
+      // 効果音
+      document.getElementById('enableSound').checked = settings.enableSound !== false;
+      
+      // AI設定
+      document.getElementById('enableAI').checked = settings.enableAI || false;
+      document.getElementById('aiApiKey').value = settings.aiApiKey || '';
+      
+      if (settings.enableAI) {
+        document.getElementById('aiKeySection').style.display = 'block';
+        document.getElementById('aiWarning').classList.add('show');
+      }
+    }
+    
+    // テーマ選択イベント
+    document.querySelectorAll('.theme-option').forEach(option => {
+      option.addEventListener('click', function() {
+        document.querySelectorAll('.theme-option').forEach(o => o.classList.remove('selected'));
+        this.classList.add('selected');
+      });
+    });
+    
+    // ランダム検出率スライダー
+    document.getElementById('randomRate').addEventListener('input', function() {
+      document.getElementById('randomRateValue').textContent = this.value + '%';
+    });
+    
+    // AI有効化チェックボックス
+    document.getElementById('enableAI').addEventListener('change', function() {
+      const aiKeySection = document.getElementById('aiKeySection');
+      const aiWarning = document.getElementById('aiWarning');
+      
+      if (this.checked) {
+        aiKeySection.style.display = 'block';
+        aiWarning.classList.add('show');
+      } else {
+        aiKeySection.style.display = 'none';
+        aiWarning.classList.remove('show');
+      }
+    });
+    
+    // 設定を保存
+    function saveSettings() {
+      const selectedTheme = document.querySelector('.theme-option.selected').dataset.theme;
+      
+      const settings = {
+        theme: selectedTheme,
+        randomRate: parseInt(document.getElementById('randomRate').value),
+        enableSound: document.getElementById('enableSound').checked,
+        enableAI: document.getElementById('enableAI').checked,
+        aiApiKey: document.getElementById('aiApiKey').value
+      };
+      
+      google.script.run
+        .withSuccessHandler(onSaveSuccess)
+        .withFailureHandler(onSaveError)
+        .saveSettings(settings);
+    }
+    
+    function onSaveSuccess() {
+      alert('設定を保存しました！');
+      closeDialog();
+    }
+    
+    function onSaveError(error) {
+      alert('保存に失敗しました: ' + error);
+    }
+    
+    // ダイアログを閉じる
+    function closeDialog() {
+      google.script.host.close();
+    }
+    
+    // 初期化
+    loadSettings();
+  </script>
+</body>
+</html>
