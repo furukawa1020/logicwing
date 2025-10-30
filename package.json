@@ -1,0 +1,41 @@
+{
+  "name": "logicwing-ronri-chan",
+  "version": "1.0.0",
+  "description": "論理の飛躍スタンプ拡張機能（ロンリちゃん🪽） - Google Docs Add-on",
+  "keywords": [
+    "google-docs",
+    "apps-script",
+    "logic-checker",
+    "japanese",
+    "writing-assistant",
+    "ai-detection"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/logicwing.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/logicwing/issues"
+  },
+  "homepage": "https://github.com/yourusername/logicwing#readme",
+  "scripts": {
+    "login": "clasp login",
+    "create": "clasp create --type standalone --title 'ロンリちゃん'",
+    "push": "clasp push",
+    "pull": "clasp pull",
+    "open": "clasp open",
+    "deploy": "clasp deploy",
+    "version": "clasp version",
+    "logs": "clasp logs"
+  },
+  "devDependencies": {
+    "@google/clasp": "^2.4.2",
+    "@types/google-apps-script": "^1.0.83"
+  },
+  "clasp": {
+    "scriptId": "",
+    "rootDir": "./src"
+  }
+}
