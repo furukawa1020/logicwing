@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>ロンリちゃん🪽 プレビュー</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 40px;
+      background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+      font-family: 'Hiragino Sans', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    
+    h1 {
+      color: #E53935;
+      font-size: 36px;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .preview-container {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+    
+    .description {
+      background: white;
+      padding: 20px 30px;
+      border-radius: 12px;
+      max-width: 600px;
+      margin-top: 20px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+    
+    .description h2 {
+      color: #E53935;
+      font-size: 20px;
+      margin-bottom: 12px;
+    }
+    
+    .description ul {
+      margin: 0;
+      padding-left: 20px;
+      line-height: 1.8;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>🪽 ロンリちゃん</h1>
+  
+  <div class="preview-container">
+    <svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="stampGradient" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" style="stop-color:#FF6B6B;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#E53935;stop-opacity:1" />
+        </radialGradient>
+        
+        <filter id="shadow">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>
+          <feOffset dx="0" dy="6" result="offsetblur"/>
+          <feComponentTransfer>
+            <feFuncA type="linear" slope="0.4"/>
+          </feComponentTransfer>
+          <feMerge> 
+            <feMergeNode/>
+            <feMergeNode in="SourceGraphic"/> 
+          </feMerge>
+        </filter>
+      </defs>
+      
+      <!-- 本体：印鑑 -->
+      <g id="stamp-body" filter="url(#shadow)">
+        <!-- 外円 -->
+        <circle cx="100" cy="100" r="80" 
+                fill="url(#stampGradient)" 
+                stroke="#FFFFFF" 
+                stroke-width="8"/>
+        
+        <!-- 内円（装飾） -->
+        <circle cx="100" cy="100" r="68" 
+                fill="none" 
+                stroke="#FFFFFF" 
+                stroke-width="2" 
+                opacity="0.5"/>
+        
+        <!-- 文字：論理の飛躍 -->
+        <text x="100" y="90" 
+              text-anchor="middle" 
+              font-family="'Hiragino Mincho ProN', 'Yu Mincho', serif" 
+              font-size="24" 
+              font-weight="900" 
+              fill="#FFFFFF">
+          論理の
+        </text>
+        
+        <text x="100" y="118" 
+              text-anchor="middle" 
+              font-family="'Hiragino Mincho ProN', 'Yu Mincho', serif" 
+              font-size="24" 
+              font-weight="900" 
+              fill="#FFFFFF">
+          飛躍
+        </text>
+        
+        <!-- 印影の質感 -->
+        <circle cx="85" cy="85" r="6" fill="#FFFFFF" opacity="0.3"/>
+        <circle cx="115" cy="115" r="4" fill="#FFFFFF" opacity="0.25"/>
+      </g>
+      
+      <!-- 右翼（画像通りのデザイン） -->
+      <g id="right-wing">
+        <path d="M 170 70 
+                 Q 190 50, 200 40
+                 Q 205 60, 207 80
+                 Q 208 100, 205 120
+                 Q 190 110, 180 100
+                 Q 175 90, 172 80
+                 Z"
+              fill="#E53935"
+              stroke="#FFFFFF"
+              stroke-width="3"
+              opacity="1">
+          <animateTransform
+            attributeName="transform"
+            attributeType="XML"
+            type="rotate"
+            values="0 170 90; -20 170 90; 0 170 90"
+            dur="0.6s"
+            repeatCount="indefinite"/>
+        </path>
+        
+        <!-- 羽の羽根模様 -->
+        <line x1="175" y1="70" x2="195" y2="50" stroke="#FFFFFF" stroke-width="2.5" opacity="0.6"/>
+        <line x1="175" y1="80" x2="200" y2="65" stroke="#FFFFFF" stroke-width="2.5" opacity="0.6"/>
+        <line x1="175" y1="90" x2="202" y2="80" stroke="#FFFFFF" stroke-width="2.5" opacity="0.6"/>
+        <line x1="175" y1="100" x2="200" y2="95" stroke="#FFFFFF" stroke-width="2.5" opacity="0.6"/>
+        <line x1="175" y1="110" x2="195" y2="110" stroke="#FFFFFF" stroke-width="2.5" opacity="0.6"/>
+      </g>
+      
+      <!-- 振動線（画像の左側の線） -->
+      <g id="vibration-lines" opacity="0.8">
+        <path d="M 30 80 Q 35 75, 40 80" stroke="#E53935" stroke-width="4" fill="none" stroke-linecap="round">
+          <animate attributeName="opacity" values="0.8;0.3;0.8" dur="0.6s" repeatCount="indefinite"/>
+        </path>
+        <path d="M 35 95 Q 40 90, 45 95" stroke="#E53935" stroke-width="4" fill="none" stroke-linecap="round">
+          <animate attributeName="opacity" values="0.6;0.2;0.6" dur="0.6s" begin="0.2s" repeatCount="indefinite"/>
+        </path>
+        <path d="M 30 110 Q 35 105, 40 110" stroke="#E53935" stroke-width="4" fill="none" stroke-linecap="round">
+          <animate attributeName="opacity" values="0.7;0.25;0.7" dur="0.6s" begin="0.4s" repeatCount="indefinite"/>
+        </path>
+      </g>
+      
+      <!-- 押印エフェクト線（右下の線） -->
+      <g id="impact-lines" opacity="0.7">
+        <path d="M 145 145 L 160 160" stroke="#E53935" stroke-width="5" stroke-linecap="round"/>
+        <path d="M 155 140 L 170 150" stroke="#E53935" stroke-width="4" stroke-linecap="round"/>
+        <path d="M 140 155 L 150 170" stroke="#E53935" stroke-width="4" stroke-linecap="round"/>
+      </g>
+      
+      <!-- 浮遊アニメーション -->
+      <animateTransform
+        attributeName="transform"
+        attributeType="XML"
+        type="translate"
+        values="0 0; 0 -8; 0 0"
+        dur="2s"
+        repeatCount="indefinite"/>
+    </svg>
+  </div>
+  
+  <div class="description">
+    <h2>✨ デザイン特徴</h2>
+    <ul>
+      <li><strong>朱色の印鑑</strong> - 白い太枠の丸印鑑</li>
+      <li><strong>文字</strong> - 「論理の飛躍」を2行横書き</li>
+      <li><strong>右翼</strong> - 白い羽根模様5本入り</li>
+      <li><strong>振動線</strong> - 左側に3本の波線（パルス効果）</li>
+      <li><strong>衝撃線</strong> - 右下に押印エフェクト</li>
+      <li><strong>アニメーション</strong> - 浮遊＋羽ばたき</li>
+    </ul>
+  </div>
+</body>
+</html>
