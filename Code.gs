@@ -201,3 +201,65 @@ function getSettings() {
     return defaultSettings;
   }
 }
+
+/**
+ * 論理の飛躍検出エンジン
+ */
+class LogicLeapDetector {
+  constructor() {
+    this.patterns = [
+      // 因果関係の飛躍
+      { regex: /だから|ゆえに|したがって|よって(?!.*なぜなら|.*理由)/g, type: 'causal', weight: 0.7 },
+      // 一般化の飛躍
+      { regex: /すべて|全て|みんな|誰でも|必ず|絶対/g, type: 'generalization', weight: 0.8 },
+      // 前提の飛躍
+      { regex: /当然|明らか|言うまでもなく|疑いようもなく/g, type: 'assumption', weight: 0.6 },
+      // 二分法の誤謬
+      { regex: /AかBか|～しかない|～以外にない/g, type: 'false_dichotomy', weight: 0.7 },
+      // 循環論法
+      { regex: /なぜなら.*だからだ|.*ので.*である/g, type: 'circular', weight: 0.5 }
+    ];
+  }
+  
+  detect(text) {
+    const leaps = [];
+    const settings = getSettings();
+    
+    // パターンマッチング検出
+    for (const pattern of this.patterns) {
+      const matches = text.matchAll(pattern.regex);
+      for (const match of matches) {
+        leaps.push({
+          text: this.extractContext(text, match.index, 40),
+          score: Math.round(pattern.weight * 100),
+          type: pattern.type,
+          position: match.index
+        });
+      }
+    }
+    
+    // ランダム検出（設定された確率で）
+    if (settings.randomRate > 0 && Math.random() * 100 < settings.randomRate) {
+      const randomPos = Math.floor(Math.random() * text.length);
+      leaps.push({
+        text: this.extractContext(text, randomPos, 40),
+        score: Math.round(Math.random() * 50 + 50),
+        type: 'random',
+        position: randomPos
+      });
+    }
+    
+    return leaps;
+  }
+  
+  extractContext(text, position, length) {
+    const start = Math.max(0, position - length / 2);
+    const end = Math.min(text.length, position + length / 2);
+    let context = text.substring(start, end);
+    
+    if (start > 0) context = '...' + context;
+    if (end < text.length) context = context + '...';
+    
+    return context;
+  }
+}
