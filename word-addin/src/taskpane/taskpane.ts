@@ -55,13 +55,15 @@ async function detectLogicalLeaps() {
         return;
       }
 
-      // 検出結果を表示
-      displayLeaps(leaps);
+      // 文書内に印面を押す
+      await stampOnDocument(context, leaps);
       
       // 履歴に保存
       for (const leap of leaps) {
         await StorageManager.saveStampData(leap);
       }
+      
+      showMessage(`🪽 ${leaps.length}箇所に押印しました！`, '完了');
     });
   } catch (error) {
     console.error('検出エラー:', error);
@@ -94,10 +96,26 @@ async function manualStamp() {
         reason: '手動押印'
       };
 
-      displayLeaps([leap]);
+      // 選択範囲の後ろに印面を挿入
+      const stampImage = await loadStampImage();
+      const inlinePicture = selection.insertInlinePictureFromBase64(stampImage, Word.InsertLocation.after);
+      inlinePicture.height = 50;
+      inlinePicture.width = 50;
+      
+      await context.sync();
       await StorageManager.saveStampData(leap);
+      
+      if (currentSettings.enableSound) {
+        playStampSound();
+      }
+      
+      showMessage('手動押印しました！', '完了');
     });
   } catch (error) {
+    console.error('手動押印エラー:', error);
+    showMessage('エラーが発生しました: ' + error.message, 'エラー');
+  }
+}
     console.error('手動押印エラー:', error);
     showMessage('エラーが発生しました: ' + error.message, 'エラー');
   }
@@ -158,6 +176,83 @@ function displayLeaps(leaps: LogicLeap[]) {
   if (currentSettings.enableSound) {
     playStampSound();
   }
+}
+
+/**
+ * 文書内にスタンプを押す（メイン処理）
+ */
+async function stampOnDocument(context: Word.RequestContext, leaps: LogicLeap[]) {
+  const body = context.document.body;
+  const stampImage = await loadStampImage();
+  
+  let stampedCount = 0;
+
+  for (const leap of leaps) {
+    try {
+      // 該当テキストを検索
+      const searchResults = body.search(leap.text, {
+        matchCase: false,
+        matchWholeWord: false,
+        matchWildcards: false
+      });
+      
+      searchResults.load('items');
+      await context.sync();
+
+      if (searchResults.items.length > 0) {
+        // 最初の検出箇所に印面を挿入
+        const range = searchResults.items[0];
+        
+        // テキストをピンク色でハイライト
+        range.font.highlightColor = '#FFE4E9';
+        range.font.color = '#ff4081';
+        
+        // 範囲の後ろに印面画像を挿入
+        const inlinePicture = range.insertInlinePictureFromBase64(
+          stampImage, 
+          Word.InsertLocation.after
+        );
+        
+        // サイズを適切に設定（小さめに）
+        inlinePicture.height = 40;
+        inlinePicture.width = 40;
+        inlinePicture.lockAspectRatio = true;
+        
+        // スペースを追加
+        range.insertText(' ', Word.InsertLocation.after);
+        
+        stampedCount++;
+        await context.sync();
+      }
+    } catch (error) {
+      console.warn(`スタンプ押印失敗 for "${leap.text}":`, error);
+    }
+  }
+
+  if (currentSettings.enableSound && stampedCount > 0) {
+    playStampSound();
+  }
+}
+
+/**
+ * 印面画像をBase64で読み込み
+ */
+async function loadStampImage(): Promise<string> {
+  // 印面.pngをBase64に変換
+  const response = await fetch('../../assets/印面.png');
+  const blob = await response.blob();
+  
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64 = reader.result as string;
+      // data:image/png;base64, の部分を削除
+      const base64Data = base64.split(',')[1];
+      resolve(base64Data);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
 }
 
 /**
